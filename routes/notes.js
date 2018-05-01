@@ -5,7 +5,6 @@ const router = express.Router();
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-// const { MONGODB_URI } = require('../config');
 
 const {Note} = require('../models/note');
 
@@ -22,7 +21,7 @@ router.get('/', (req, res, next) => {
   }
 
   Note.find(filter)
-    .sort('created')
+    .sort('-updatedAt')
     .then(results => {
       res.json(results);
     })
@@ -47,7 +46,11 @@ router.get('/:id', (req, res, next) => {
 
   Note.findById(id)      
     .then(results => {
-      res.json(results);
+      if(results) {
+        res.json(results);
+      } else {
+        next(); 
+      }           
     })
     .catch(err => {
       next(err);
@@ -78,8 +81,7 @@ router.post('/', (req, res, next) => {
 
   Note.create(newItem)      
     .then(results => {
-      res.status(201);
-      res.json(results);
+      res.location('path/to/new/document').status(201).json(results);
     })
     .catch(err => {
       next(err);
@@ -108,11 +110,13 @@ router.put('/:id', (req, res, next) => {
     content: content    
   };
 
-  Note.findByIdAndUpdate(noteId, updateItem, {
-    new: true
-  })      
+  Note.findByIdAndUpdate(noteId, updateItem, {new: true})      
     .then(results => {
-      res.json(results);
+      if (results) {
+        res.json(results);
+      } else {
+        next();
+      }
     })
     .catch(err => {
       next(err);
@@ -130,6 +134,7 @@ router.delete('/:id', (req, res, next) => {
 
   return Note.findByIdAndRemove(id)      
     .then(() => {
+      res.json(`item ${id} deleted`);
       res.status(204).end();
     })
     .catch(err => {
