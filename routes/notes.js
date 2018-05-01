@@ -62,24 +62,83 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
 
-  console.log('Create a Note');
-  res.location('path/to/new/document').status(201).json({ id: 2, title: 'Temp 2' });
+  const { title, content } = req.body;
 
+  const newItem = {
+    title,
+    content    
+  };
+
+  /***** Never trust users - validate input *****/
+  if (!newItem.title) {
+    const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  Note.create(newItem)      
+    .then(results => {
+      res.status(201);
+      res.json(results);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
+// console.log('Create a Note');
+// res.location('path/to/new/document').status(201).json({ id: 2, title: 'Temp 2' });
+
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
 
-  console.log('Update a Note');
-  res.json({ id: 1, title: 'Updated Temp 1' });
+  const noteId = req.params.id;
+  const { title, content } = req.body;
 
+  /***** Never trust users. Validate input *****/
+  if (!title) {
+    const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  const updateItem = {
+    title: title,
+    content: content    
+  };
+
+  Note.findByIdAndUpdate(noteId, updateItem, {
+    new: true
+  })      
+    .then(results => {
+      res.json(results);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
+// console.log('Update a Note');
+// res.json({ id: 1, title: 'Updated Temp 1' });
+
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/:id', (req, res, next) => {
 
-  console.log('Delete a Note');
-  res.status(204).end();
+  let id = req.params.id;
+
+  return Note.findByIdAndRemove(id)      
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
+// console.log('Delete a Note');
+// res.status(204).end();
+
 
 module.exports = router;
