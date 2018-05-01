@@ -3,25 +3,61 @@
 const express = require('express');
 const router = express.Router();
 
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+// const { MONGODB_URI } = require('../config');
+
+const {Note} = require('../models/note');
+
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/', (req, res, next) => {
 
-  console.log('Get All Notes');
-  res.json([
-    { id: 1, title: 'Temp 1' },
-    { id: 2, title: 'Temp 2' },
-    { id: 3, title: 'Temp 3' }
-  ]);
+  const {searchTerm} = req.query;
+  let filter = {};
 
+  if (searchTerm) {
+    const re = new RegExp(searchTerm, 'i');
+    // filter.title = { $regex: re };
+    filter.$or = [{title: { $regex: re }},{ content:{ $regex: re } }];
+  }
+
+  Note.find(filter)
+    .sort('created')
+    .then(results => {
+      res.json(results);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
+// console.log('Get All Notes');
+// res.json([
+//   { id: 1, title: 'Temp 1' },
+//   { id: 2, title: 'Temp 2' },
+//   { id: 3, title: 'Temp 3' }
+// ]);
+
+
 
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
 
-  console.log('Get a Note');
-  res.json({ id: 1, title: 'Temp 1' });
+  const id = req.params.id;  
 
+  Note.findById(id)      
+    .then(results => {
+      res.json(results);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
+
+// console.log('Get a Note');
+// res.json({ id: 1, title: 'Temp 1' });
+
+
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
