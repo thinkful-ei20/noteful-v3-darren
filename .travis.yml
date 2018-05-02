@@ -8,4 +8,4 @@ deploy:
       secure: d3edd4d6-67c1-4c85-a770-1b83e975e4ee
     app: noteful-darren-v3
     on:
-      repo: https://github.com/thinkful-ei20/noteful-v3-darren.git
+      repo: git@github.com:thinkful-ei20/noteful-v3-darren.git
