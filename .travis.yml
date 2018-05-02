@@ -5,7 +5,10 @@ services:
 deploy:
     provider: heroku
     api_key:
-      secure: d3edd4d6-67c1-4c85-a770-1b83e975e4ee
+      secure: d3edd4d6-67c1-4c85-a770-1b83e975e4ee 
+      #secure is the API from heroku account settings api key
     app: noteful-darren-v3
+    #name of app on heroku
     on:
       repo: thinkful-ei20/noteful-v3-darren
+      #repo is travis title
