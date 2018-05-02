@@ -134,8 +134,7 @@ router.delete('/:id', (req, res, next) => {
 
   return Note.findByIdAndRemove(id)      
     .then(() => {
-      res.json(`item ${id} deleted`);
-      res.status(204).end();
+      res.sendStatus(204);            
     })
     .catch(err => {
       next(err);

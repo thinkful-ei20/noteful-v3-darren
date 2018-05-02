@@ -134,7 +134,26 @@ describe('Noteful App v3', function() {
       });
     });
 
+    describe('DELETE /api/notes/:id', function() {
 
+      it('should delete the note at given id', function() {
+        let note;
+
+        return Note
+          .findOne()
+          .then(function (_note) {
+            note = _note;
+            return chai.request(app).delete(`/api/notes/${note.id}`);
+          })
+          .then(function(res) {
+            expect(res).to.have.status(204);
+            return Note.findById(note.id);
+          })
+          .then(function(_note){
+            expect(_note).to.be.null;
+          });
+      });
+    });
 
 
   });
