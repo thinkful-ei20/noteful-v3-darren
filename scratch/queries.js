@@ -1,10 +1,10 @@
-'use strict'; 
+// 'use strict'; 
 
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-const { MONGODB_URI } = require('../config');
+// const mongoose = require('mongoose');
 
-const {Note} = require('../models/note');
+// const { MONGODB_URI } = require('../config');
+
+// const {Note} = require('../models/note');
 
 
 
