@@ -2,10 +2,10 @@ language: node_js
 node_js: node
 services:
 - mongodb
-# deploy:
-#     provider: heroku
-#     api_key:
-#       secure: [YOUR-API-KEY]
-#     app: [YOUR-APP-NAME]
-#     on:
-#       repo: [YOUR-APP-REPO]
+deploy:
+    provider: heroku
+    api_key:
+      secure: d3edd4d6-67c1-4c85-a770-1b83e975e4ee
+    app: noteful-darren-v3
+    on:
+      repo: https://github.com/thinkful-ei20/noteful-v3-darren.git
