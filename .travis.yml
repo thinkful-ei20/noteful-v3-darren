@@ -6,6 +6,6 @@ deploy:
   provider: heroku
   api_key:
     secure: EkPAXU4+oRDTAYAd4kVVzaEV8Z5EVT/lzRnPueDHEe+yv0iG4CnC7hAfhpazQz4fgByvP1O32uxSCN5mjH+DnPf/hdHhyIDEizcsra+DXnDK4HEQQoZRV6KPx7KXI/zyqdNjAzlO+aQ1V1Dv4KpFFVBoOW+tUAxI/T8i1st86umUBLnZ4Ys126FHoaiizTfUMg/4h29GV0/bceO5hys9hEfXOveYhZcp9PgsKU1ImzePm0SaCNu8DHr8fMFqYs+pEw56ZzUyfq0E4JUeD04M+IcdHjNaVT0VnbxO4CFjIWtD+xQbhCAcY1I7req2PGljazb7odxlNwLA3a2allDpKh9ucu4dBDNyFZRdNE9Wa9IuM3CYfjBSoeNyEoBA+S6lBwOQ5yqfgQhPD5AtCofW75W6dMrCor+DNBOElgJZsRGzIWoIC9Lhvhq4YceMd8jaYttU/vR2E463gK3ASKFjdGg7/oG7tlykb81GkvF4EMJoeczTTcJVpg4TyiKTVqSoCjN552c/21pses5Co5eB4bT2KsJX8Nyy3fWzetO4Yurs1UyL5ks1ng9w9cEWXC5A6M+/mybYrTbZC+asrMJp6Nk365OvjNR/nlMDistvOuGdd8NRcoTmw0uAMRVCHZRBlN8mNRv9m9RxoG3yd3qbLa0TPjFH3KO7jKLOxeDLf7U=
-  app: noteful-v3-darren
+  app: noteful-darren-v3
   on:
     repo: thinkful-ei20/noteful-v3-darren
