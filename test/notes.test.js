@@ -12,7 +12,7 @@ const seedNotes = require('../db/seed/notes');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe('Noteful App v3', function() {
+describe('Noteful App v3 NOTES', function() {
 
   before(function () {
     return mongoose.connect(TEST_MONGODB_URI)
