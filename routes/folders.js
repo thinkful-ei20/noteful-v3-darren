@@ -28,13 +28,19 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req,res,next) => {
 
   let {id} = req.params;
+
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    const err = new Error('`Id` not a valid format');
+    return res.status(404).send(err.message);
+  } 
   
   Folder.findById(id)
     .then(results => {
       if(results) {
         res.json(results);
       } else {
-        res.status(404).send('ID not valid');
+        const err = new Error('`Id` does not exist');
+        res.status(404).send(err.message);
       }           
     })
     .catch(err => {
@@ -45,17 +51,84 @@ router.get('/:id', (req,res,next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 
+router.post('/', (req,res,next) => {
+  const {name} = req.body;
 
+  const newFolder = {
+    name
+  };
+
+  if(!newFolder.name) {
+    const err = new Error('name value required');
+    err.status = 400;
+    return next(err);
+  }
+
+  Folder.create(newFolder).
+    then(results => {
+      res.location(`${req.originalUrl}/${results.id}`).status(201).json(results);
+    })
+    .catch(err => {
+      if (err.code === 11000) {
+        err = new Error('The folder name already exists, please choose another');
+        err.status = 400;
+      }
+      next(err);
+    });
+
+});
 
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 
+router.put('/:id', (req,res,next) => {
+  const folderId = req.params.id;
 
+  const {name} = req.body;
+
+  if(!name) {
+    const err = new Error('name value required');
+    err.status = 400;
+    return next(err);
+  }
+
+  if(!mongoose.Types.ObjectId.isValid(folderId)){
+    const err = new Error('`Id` not a valid format');
+    return res.status(404).send(err.message);
+  } 
+
+  const updateFolder = {
+    name
+  };
+
+  Folder.findByIdAndUpdate(folderId, updateFolder, {new:true})
+    .then(results => {
+      if (results) {
+        res.json(results);
+      } else {
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 
+router.delete('/:id', (req, res, next) => {
 
+  let id = req.params.id;
+
+  return Folder.findByIdAndRemove(id)      
+    .then(() => {
+      res.sendStatus(204);            
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 
 
 
