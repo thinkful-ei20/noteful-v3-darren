@@ -10,6 +10,7 @@ const { PORT, MONGODB_URI } = require('./config');
 
 
 const notesRouter = require('./routes/notes');
+const foldersRouter = require('./routes/folders');
 
 // Create an Express application
 const app = express();
@@ -27,6 +28,8 @@ app.use(express.json());
 
 // Mount routers
 app.use('/api/notes', notesRouter);
+app.use('/api/folders', foldersRouter);
+
 
 // Catch-all 404
 app.use(function (req, res, next) {
