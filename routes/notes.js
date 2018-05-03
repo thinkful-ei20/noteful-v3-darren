@@ -11,7 +11,8 @@ const {Note} = require('../models/note');
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/', (req, res, next) => {
 
-  const {searchTerm} = req.query;
+  const {searchTerm,folderId} = req.query;
+ 
   let filter = {};
 
   if (searchTerm) {
@@ -19,11 +20,17 @@ router.get('/', (req, res, next) => {
     // filter.title = { $regex: re };
     filter.$or = [{title: { $regex: re }},{ content:{ $regex: re } }];
   }
+  if (folderId){
+    filter.folderId = folderId;
+  }
+
+
 
   Note.find(filter)
     .sort('-updatedAt')
     .then(results => {
       res.json(results);
+      console.log(filter);
     })
     .catch(err => {
       next(err);
