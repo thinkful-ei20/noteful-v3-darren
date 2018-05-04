@@ -47,7 +47,8 @@ describe('Noteful App v3 FOLDERS', function() {
           expect(res.body).to.have.length(data.length);
         });
     });
-    it('should return folder with correct `name` field', function(){
+
+    it('should return folder with correct fields', function(){
       return Promise.all([
         Folder.find(),
         chai.request(app).get('/api/folders')
@@ -66,10 +67,30 @@ describe('Noteful App v3 FOLDERS', function() {
 
   });
 
+  describe('GET /api/folders/:id', function() {
 
+    it('should return only the folder at given folderId', function() {
+      let data;
 
+      return Folder.findOne()
+        .then(_data => {
+          data = _data;
+          return chai.request(app).get(`/api/folders/${data.id}`);
+        })
+        .then((res) => {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
 
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.keys('id', 'name','createdAt','updatedAt');
 
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.name).to.equal(data.name);
+          expect(new Date(res.body.updatedAt).getTime()).to.equal(data.updatedAt.getTime());
+          expect(new Date(res.body.createdAt).getTime()).to.equal(data.createdAt.getTime());
+        });
+    });
+  });
 
 
   

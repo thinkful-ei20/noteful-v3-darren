@@ -24,8 +24,6 @@ router.get('/', (req, res, next) => {
     filter.folderId = folderId;
   }
 
-
-
   Note.find(filter)
     .sort('-updatedAt')
     .then(results => {
@@ -49,7 +47,12 @@ router.get('/', (req, res, next) => {
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
 
-  const id = req.params.id;  
+  const id = req.params.id; 
+  
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    const err = new Error('`Id` not a valid format');
+    return res.status(404).send(err.message);
+  } 
 
   Note.findById(id)      
     .then(results => {
@@ -132,6 +135,10 @@ router.put('/:id', (req, res, next) => {
       return res.status(404).send(err.message);
     } 
   }
+  if(!mongoose.Types.ObjectId.isValid(noteId)){
+    const err = new Error('`Id` not a valid format');
+    return res.status(404).send(err.message);
+  } 
 
   Note.findByIdAndUpdate(noteId, updateItem, {new: true})      
     .then(results => {

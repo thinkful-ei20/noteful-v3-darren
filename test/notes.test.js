@@ -133,16 +133,16 @@ describe('Noteful App v3 NOTES', function() {
         });
     });
 
-    // it('should respond with a 400 for improperly formatted id', function () {
-    //   const badId = '99-99-99';
+    it('should respond with a 404 for improperly formatted id', function () {
+      const badId = '99-99-99';
 
-    //   return chai.request(app)
-    //     .get(`/api/notes/${badId}`)
-    //     .then(res => {
-    //       expect(res).to.have.status(400);
-    //       expect(res.body.message).to.eq('The `id` is not valid');
-    //     });
-    // });
+      return chai.request(app)
+        .get(`/api/notes/${badId}`)
+        .then(res => {
+          expect(res).to.have.status(404);
+          expect(res.text).to.eq('`Id` not a valid format');
+        });
+    });
 
     it('should respond with a 404 for an invalid id', function () {
 
@@ -244,21 +244,21 @@ describe('Noteful App v3 NOTES', function() {
         });
     });
     
-    // it('should respond with a 400 for improperly formatted id', function () {
-    //   const updateItem = {
-    //     'title': 'What about dogs?!',
-    //     'content': 'woof woof'
-    //   };
-    //   const badId = '99-99-99';
+    it('should respond with a 400 for improperly formatted id', function () {
+      const updateItem = {
+        'title': 'What about dogs?!',
+        'content': 'woof woof'
+      };
+      const badId = '99-99-99';
 
-    //   return chai.request(app)
-    //     .put(`/api/notes/${badId}`)
-    //     .send(updateItem)
-    //     .then(res => {
-    //       expect(res).to.have.status(400);
-    //       expect(res.body.message).to.eq('The `id` is not valid');
-    //     });
-    // });
+      return chai.request(app)
+        .put(`/api/notes/${badId}`)
+        .send(updateItem)
+        .then(res => {
+          expect(res).to.have.status(404);
+          expect(res.text).to.eq('`Id` not a valid format');
+        });
+    });
 
     it('should respond with a 404 for an invalid id', function () {
       const updateItem = {
