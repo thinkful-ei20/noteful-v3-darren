@@ -13,6 +13,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('Noteful App v3 NOTES', function() {
+  this.timeout(5000);
 
   before(function () {
     return mongoose.connect(TEST_MONGODB_URI)
@@ -64,7 +65,7 @@ describe('Noteful App v3 NOTES', function() {
           expect(res.body).to.have.length(data.length);
           res.body.forEach(function (item) {
             expect(item).to.be.a('object');
-            expect(item).to.have.keys('id', 'title', 'content', 'createdAt', 'updatedAt','folderId');
+            expect(item).to.have.keys('id', 'title', 'content', 'createdAt', 'updatedAt','folderId', 'tags');
           });
         });
     });
@@ -124,7 +125,7 @@ describe('Noteful App v3 NOTES', function() {
           expect(res).to.be.json;
 
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.keys('id', 'title', 'content','createdAt','updatedAt','folderId');
+          expect(res.body).to.have.keys('id', 'title', 'content','createdAt','updatedAt','folderId','tags');
 
           // 3) **then** compare
           expect(res.body.id).to.equal(data.id);
@@ -173,7 +174,7 @@ describe('Noteful App v3 NOTES', function() {
           expect(res).to.have.header('location');
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.have.keys('id', 'title', 'content', 'createdAt', 'updatedAt');
+          expect(res.body).to.have.keys('id', 'title', 'content', 'createdAt', 'updatedAt','tags');
           // 2) then call the database
           return Note.findById(res.body.id);
         })
