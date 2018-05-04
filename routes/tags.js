@@ -10,7 +10,6 @@ const {Tag} = require('../models/tag');
 const {Note} = require('../models/note');
 
 
-
 /* ========== GET/READ ALL ITEM ========== */
 
 router.get('/', (req, res, next) => {
@@ -49,7 +48,6 @@ router.get('/:id', (req,res,next) => {
     });
 });
 
-
 /* ========== POST/CREATE AN ITEM ========== */
 
 router.post('/', (req,res,next) => {
@@ -77,7 +75,6 @@ router.post('/', (req,res,next) => {
     });
 
 });
-
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 
@@ -118,9 +115,6 @@ router.put('/:id', (req,res,next) => {
 
 });
 
-
-
-
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 
 router.delete('/:id', (req, res, next) => {
@@ -136,14 +130,8 @@ router.delete('/:id', (req, res, next) => {
     .catch(err => {
       next(err);
     });
-   
-
-
-
-
 
 });
-
 
 
 module.exports = router;

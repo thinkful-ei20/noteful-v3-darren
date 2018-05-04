@@ -11,7 +11,7 @@ const {Note} = require('../models/note');
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/', (req, res, next) => {
 
-  const {searchTerm,folderId} = req.query;
+  const {searchTerm,folderId,tagId} = req.query;
  
   let filter = {};
 
@@ -23,9 +23,14 @@ router.get('/', (req, res, next) => {
   if (folderId){
     filter.folderId = folderId;
   }
+  if(tagId){
+    filter.tags = tagId;
+  }
+ 
 
   Note.find(filter)
     .sort('-updatedAt')
+    .populate('tags')
     .then(results => {
       res.json(results);
       // console.log(filter);
@@ -34,15 +39,6 @@ router.get('/', (req, res, next) => {
       next(err);
     });
 });
-
-// console.log('Get All Notes');
-// res.json([
-//   { id: 1, title: 'Temp 1' },
-//   { id: 2, title: 'Temp 2' },
-//   { id: 3, title: 'Temp 3' }
-// ]);
-
-
 
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
@@ -56,7 +52,8 @@ router.get('/:id', (req, res, next) => {
     // return next(err);
   } 
 
-  Note.findById(id)      
+  Note.findById(id)  
+    .populate('tags')    
     .then(results => {
       if(results) {
         res.json(results);
@@ -69,37 +66,39 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-// console.log('Get a Note');
-// res.json({ id: 1, title: 'Temp 1' });
-
-
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
 
-  const { title, content, folderId } = req.body;
+  const { title, content, folderId, tags = []} = req.body;
 
   const newItem = {
     title,
     content,
-    folderId    
+    tags
   };
-
   /***** Never trust users - validate input *****/
   if (!newItem.title) {
     const err = new Error('Missing `title` in request body');
     err.status = 400;
     return next(err);
   }
-  if(folderId){
-    if(!mongoose.Types.ObjectId.isValid(folderId)){
-      const err = new Error('The `id` is not valid');
-      // return res.status(404).send(err.message);
-      err.status = 404;
-      return next(err);
-    } 
+
+  if (mongoose.Types.ObjectId.isValid(folderId)) {
+    newItem.folderId = folderId;
   }
 
+  if(tags) {
+    tags.forEach((tag) => {
+      if(!mongoose.Types.ObjectId.isValid(tag)){
+        const err = new Error('The `id` is not valid');
+        // return res.status(404).send(err.message);
+        err.status = 404;
+        return next(err);
+      } 
+      // newItem.tags = tags;
+    });    
+  }
 
   Note.create(newItem)      
     .then(results => {
@@ -109,9 +108,6 @@ router.post('/', (req, res, next) => {
       next(err);
     });
 });
-
-// console.log('Create a Note');
-// res.location('path/to/new/document').status(201).json({ id: 2, title: 'Temp 2' });
 
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
