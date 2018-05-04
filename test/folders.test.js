@@ -47,7 +47,6 @@ describe('Noteful App v3 FOLDERS', function() {
           expect(res.body).to.have.length(data.length);
         });
     });
-
     it('should return folder with correct `name` field', function(){
       return Promise.all([
         Folder.find(),
@@ -64,26 +63,6 @@ describe('Noteful App v3 FOLDERS', function() {
           });
         });
     });
-
-    // it('should return correct folder search result for a searchTerm query', function () {
-    //   const searchTerm = 'Archive';
-    //   const re = new RegExp(searchTerm, 'i');
-
-    //   return Promise.all([
-    //     Folder.find({ title: { $regex: re } }),
-    //     chai.request(app).get(`/api/folders?searchTerm=${searchTerm}`)
-    //   ])
-    //     .then(([data, res]) => {
-    //       expect(res).to.have.status(200);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('array');
-    //       expect(res.body).to.have.length(1);
-    //       expect(res.body[0]).to.be.an('object');
-    //       expect(res.body[0].id).to.equal(data[0].id);
-    //     });
-    // });
-
-
 
   });
 

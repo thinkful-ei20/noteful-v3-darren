@@ -72,11 +72,12 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
 
-  const { title, content } = req.body;
+  const { title, content, folderId } = req.body;
 
   const newItem = {
     title,
-    content    
+    content,
+    folderId    
   };
 
   /***** Never trust users - validate input *****/
@@ -85,6 +86,13 @@ router.post('/', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  if(folderId){
+    if(!mongoose.Types.ObjectId.isValid(folderId)){
+      const err = new Error('`Id` not a valid format');
+      return res.status(404).send(err.message);
+    } 
+  }
+
 
   Note.create(newItem)      
     .then(results => {
@@ -103,7 +111,7 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
 
   const noteId = req.params.id;
-  const { title, content } = req.body;
+  const { title, content,folderId } = req.body;
 
   /***** Never trust users. Validate input *****/
   if (!title) {
@@ -113,9 +121,17 @@ router.put('/:id', (req, res, next) => {
   }
 
   const updateItem = {
-    title: title,
-    content: content    
+    title,
+    content, 
+    folderId
   };
+
+  if(folderId){
+    if(!mongoose.Types.ObjectId.isValid(folderId)){
+      const err = new Error('`Id` not a valid format');
+      return res.status(404).send(err.message);
+    } 
+  }
 
   Note.findByIdAndUpdate(noteId, updateItem, {new: true})      
     .then(results => {
