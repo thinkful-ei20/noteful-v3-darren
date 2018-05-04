@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 
 const {Note} = require('../models/note');
 
@@ -28,7 +28,7 @@ router.get('/', (req, res, next) => {
     .sort('-updatedAt')
     .then(results => {
       res.json(results);
-      console.log(filter);
+      // console.log(filter);
     })
     .catch(err => {
       next(err);
@@ -50,8 +50,10 @@ router.get('/:id', (req, res, next) => {
   const id = req.params.id; 
   
   if(!mongoose.Types.ObjectId.isValid(id)){
-    const err = new Error('`Id` not a valid format');
+    const err = new Error('The `id` is not valid');
     return res.status(404).send(err.message);
+    // err.status = 404;
+    // return next(err);
   } 
 
   Note.findById(id)      
@@ -91,8 +93,10 @@ router.post('/', (req, res, next) => {
   }
   if(folderId){
     if(!mongoose.Types.ObjectId.isValid(folderId)){
-      const err = new Error('`Id` not a valid format');
-      return res.status(404).send(err.message);
+      const err = new Error('The `id` is not valid');
+      // return res.status(404).send(err.message);
+      err.status = 404;
+      return next(err);
     } 
   }
 
@@ -112,38 +116,32 @@ router.post('/', (req, res, next) => {
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
+  const { id } = req.params;
+  const { title, content, folderId } = req.body;
 
-  const noteId = req.params.id;
-  const { title, content,folderId } = req.body;
-
-  /***** Never trust users. Validate input *****/
+  /***** Never trust users - validate input *****/
   if (!title) {
     const err = new Error('Missing `title` in request body');
     err.status = 400;
     return next(err);
   }
 
-  const updateItem = {
-    title,
-    content, 
-    folderId
-  };
-
-  if(folderId){
-    if(!mongoose.Types.ObjectId.isValid(folderId)){
-      const err = new Error('`Id` not a valid format');
-      return res.status(404).send(err.message);
-    } 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
   }
-  if(!mongoose.Types.ObjectId.isValid(noteId)){
-    const err = new Error('`Id` not a valid format');
-    return res.status(404).send(err.message);
-  } 
 
-  Note.findByIdAndUpdate(noteId, updateItem, {new: true})      
-    .then(results => {
-      if (results) {
-        res.json(results);
+  const updateItem = { title, content };
+
+  if (mongoose.Types.ObjectId.isValid(folderId)) {
+    updateItem.folderId = folderId;
+  }
+
+  Note.findByIdAndUpdate(id, updateItem, { new: true })
+    .then(result => {
+      if (result) {
+        res.json(result);
       } else {
         next();
       }

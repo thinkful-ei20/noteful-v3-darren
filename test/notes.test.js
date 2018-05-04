@@ -140,7 +140,7 @@ describe('Noteful App v3 NOTES', function() {
         .get(`/api/notes/${badId}`)
         .then(res => {
           expect(res).to.have.status(404);
-          expect(res.text).to.eq('`Id` not a valid format');
+          expect(res.text).to.eq('The `id` is not valid');
         });
     });
 
@@ -255,8 +255,8 @@ describe('Noteful App v3 NOTES', function() {
         .put(`/api/notes/${badId}`)
         .send(updateItem)
         .then(res => {
-          expect(res).to.have.status(404);
-          expect(res.text).to.eq('`Id` not a valid format');
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('The `id` is not valid');
         });
     });
 

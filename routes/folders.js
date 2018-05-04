@@ -30,8 +30,10 @@ router.get('/:id', (req,res,next) => {
   let {id} = req.params;
 
   if(!mongoose.Types.ObjectId.isValid(id)){
-    const err = new Error('`Id` not a valid format');
-    return res.status(404).send(err.message);
+    const err = new Error('The `id` is not valid');
+    // return res.status(404).send(err.message);
+    err.status = 400;
+    return next(err);
   } 
   
   Folder.findById(id)
@@ -93,8 +95,10 @@ router.put('/:id', (req,res,next) => {
   }
 
   if(!mongoose.Types.ObjectId.isValid(folderId)){
-    const err = new Error('`Id` not a valid format');
-    return res.status(404).send(err.message);
+    const err = new Error('The `id` is not valid');
+    // return res.status(404).send(err.message);
+    err.status = 400;
+    return next(err);
   } 
 
   const updateFolder = {
