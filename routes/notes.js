@@ -151,8 +151,6 @@ router.put('/:id', (req, res, next) => {
     });
 });
 
-// console.log('Update a Note');
-// res.json({ id: 1, title: 'Updated Temp 1' });
 
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
@@ -169,8 +167,6 @@ router.delete('/:id', (req, res, next) => {
     });
 });
 
-// console.log('Delete a Note');
-// res.status(204).end();
 
 
 module.exports = router;
