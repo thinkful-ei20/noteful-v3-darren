@@ -113,7 +113,7 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
-  const { title, content, folderId } = req.body;
+  const { title, content, folderId,tags = [] } = req.body;
 
   /***** Never trust users - validate input *****/
   if (!title) {
@@ -128,10 +128,20 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const updateItem = { title, content };
+  const updateItem = { title, content,tags };
 
   if (mongoose.Types.ObjectId.isValid(folderId)) {
     updateItem.folderId = folderId;
+  }
+  if(tags) {
+    tags.forEach((tag) => {
+      if(!mongoose.Types.ObjectId.isValid(tag)){
+        const err = new Error('The `id` is not valid');
+        // return res.status(404).send(err.message);
+        err.status = 404;
+        return next(err);
+      } 
+    });    
   }
 
   Note.findByIdAndUpdate(id, updateItem, { new: true })
